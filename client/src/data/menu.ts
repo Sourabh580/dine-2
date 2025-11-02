@@ -23,7 +23,7 @@ export const menu: Record<string, MenuItem[]> = {
   ],
   Roti: [
     { id: "roti-1", name: "Tawa Roti", price: 10, description: "Soft whole wheat flatbread", image: "tawa_roti_indian_fla_01120b6a.jpg" },
-    { id: "roti-2", name: "Butter Roti", price: 15, description: "Roti brushed with fresh butter", image: "butter_roti_indian_b_9eabd061.jpg" },
+    { id: "roti-2", name: "Butter Roti", price: 15, description: "Roti brushed with fresh butter", image: "whole_wheat_roti_wit_a6933a9a.jpg" },
     { id: "roti-3", name: "Lachha Paratha", price: 25, description: "Layered flaky flatbread", image: "lachha_paratha_layer_070c0ac8.jpg" },
     { id: "roti-4", name: "Naan", price: 20, description: "Soft leavened bread from tandoor", image: "naan_indian_bread_ta_77792fc4.jpg" },
     { id: "roti-5", name: "Garlic Naan", price: 30, description: "Naan topped with garlic and herbs", image: "garlic_naan_indian_b_c9cfc19d.jpg" },
@@ -39,8 +39,8 @@ export const menu: Record<string, MenuItem[]> = {
   ],
   Desserts: [
     { id: "dessert-1", name: "Gulab Jamun", price: 45, description: "Soft milk dumplings in sugar syrup", image: "gulab_jamun_indian_d_68135efd.jpg" },
-    { id: "dessert-2", name: "Rasmalai", price: 55, description: "Cottage cheese patties in sweet milk", image: "rasmalai_indian_swee_5b4f3aaa.jpg" },
-    { id: "dessert-3", name: "Kheer", price: 50, description: "Rice pudding with cardamom", image: "kheer_rice_pudding_i_e14fae42.jpg" },
+    { id: "dessert-2", name: "Rasmalai", price: 55, description: "Cottage cheese patties in sweet milk", image: "rasmalai_indian_dess_999d1e62.jpg" },
+    { id: "dessert-3", name: "Kheer", price: 50, description: "Rice pudding with cardamom", image: "kheer_indian_rice_pu_9a48c04b.jpg" },
     { id: "dessert-4", name: "Jalebi", price: 40, description: "Crispy syrup-soaked spirals", image: "jalebi_indian_sweet__29942f20.jpg" },
     { id: "dessert-5", name: "Ice Cream", price: 35, description: "Creamy vanilla ice cream", image: "vanilla_ice_cream_sc_f17dd9b1.jpg" },
   ],

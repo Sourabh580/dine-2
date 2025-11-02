@@ -22,6 +22,13 @@ const categoryIcons: Record<string, React.ComponentType<{ className?: string }>>
   Desserts: CakeIcon,
 };
 
+const categoryBackgrounds: Record<string, string> = {
+  Sabji: "indian_sabji_vegetab_c9cefded.jpg",
+  Roti: "indian_roti_flatbrea_78274e9b.jpg",
+  Beverages: "lassi_indian_yogurt__8d3145ee.jpg",
+  Desserts: "ice_cream_dessert_bo_8c99ba01.jpg",
+};
+
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const { searchQuery, selectedCategory } = useSearch();
@@ -189,31 +196,45 @@ export default function HomePage() {
           {Object.keys(menu).map((category) => {
             const Icon = categoryIcons[category] || SparklesIcon;
             const itemCount = menu[category].length;
+            const backgroundImage = categoryBackgrounds[category];
+            const getImagePath = (imageName?: string) => {
+              if (!imageName) return null;
+              try {
+                return new URL(`../../../attached_assets/stock_images/${imageName}`, import.meta.url).href;
+              } catch {
+                return null;
+              }
+            };
 
             return (
               <button
                 key={category}
                 onClick={() => setLocation(`/category/${category}`)}
-                className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-primary/30"
+                className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 data-testid={`category-${category.toLowerCase()}`}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/30 to-primary/20" />
+                <img 
+                  src={getImagePath(backgroundImage) || ''} 
+                  alt={category}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-all duration-300" />
                 
-                <div className="relative h-full flex flex-col items-center justify-center p-6 text-center bg-card/70 backdrop-blur-sm">
-                  <div className="bg-primary/20 p-4 rounded-full mb-3 md:mb-4">
-                    <Icon className="h-12 w-12 md:h-16 md:w-16 text-primary" />
+                <div className="relative h-full flex flex-col items-center justify-center p-6 text-center">
+                  <div className="bg-white/20 backdrop-blur-sm p-4 rounded-full mb-3 md:mb-4">
+                    <Icon className="h-12 w-12 md:h-16 md:w-16 text-white drop-shadow-lg" />
                   </div>
                   
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground mb-1 drop-shadow-sm">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     {category}
                   </h3>
                   
-                  <span className="text-sm md:text-base text-foreground/80 font-medium">
+                  <span className="text-sm md:text-base text-white/90 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {itemCount} items
                   </span>
                 </div>
 
-                <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-3 py-1 rounded-full shadow-md">
+                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-black px-3 py-1 rounded-full shadow-lg">
                   <span className="text-sm font-bold">
                     {itemCount}
                   </span>
