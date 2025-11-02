@@ -1,0 +1,208 @@
+import { useLocation } from "wouter";
+import { menu, MenuItem } from "../data/menu";
+import { useSearch } from "../contexts/SearchContext";
+import { searchAllCategories } from "../utils/searchUtils";
+import { useCart } from "../contexts/CartContext";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CategoryFilter } from "@/components/CategoryFilter";
+import { CheckCircleIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/solid";
+import {
+  SparklesIcon,
+  CakeIcon,
+  CubeIcon,
+  BeakerIcon,
+} from "@heroicons/react/24/outline";
+
+const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  Sabji: SparklesIcon,
+  Roti: CubeIcon,
+  Beverages: BeakerIcon,
+  Desserts: CakeIcon,
+};
+
+export default function HomePage() {
+  const [, setLocation] = useLocation();
+  const { searchQuery, selectedCategory } = useSearch();
+  const { cart, addToCart, updateQuantity } = useCart();
+
+  const searchedMenu = searchAllCategories(menu, searchQuery);
+  const filteredMenu = selectedCategory
+    ? { [selectedCategory]: searchedMenu[selectedCategory] || [] }
+    : searchedMenu;
+  const hasSearchResults = Object.keys(filteredMenu).length > 0;
+  const isSearching = searchQuery.trim().length > 0;
+
+  const getItemQuantity = (itemId: string) => {
+    return cart.find((item) => item.id === itemId)?.quantity || 0;
+  };
+
+  const renderMenuItem = (item: MenuItem) => {
+    const quantity = getItemQuantity(item.id);
+    const isSelected = quantity > 0;
+
+    return (
+      <Card
+        key={item.id}
+        className={`p-4 transition-all duration-200 ${
+          isSelected ? "ring-2 ring-primary shadow-lg scale-105" : ""
+        }`}
+        data-testid={`item-${item.id}`}
+      >
+        <div className="space-y-3">
+          <div>
+            <h3 className="text-lg md:text-xl font-medium text-foreground mb-1">
+              {item.name}
+            </h3>
+            {item.description && (
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {item.description}
+              </p>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between pt-2">
+            <span className="text-base md:text-lg font-semibold text-foreground">
+              ₹{item.price}
+            </span>
+
+            {!isSelected ? (
+              <Button
+                onClick={() => addToCart(item)}
+                size="sm"
+                variant="default"
+                data-testid={`button-add-${item.id}`}
+              >
+                <PlusIcon className="h-4 w-4 mr-1" />
+                Add
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <CheckCircleIcon className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-1 bg-primary/10 rounded-full p-1">
+                  <button
+                    onClick={() => updateQuantity(item.id, quantity - 1)}
+                    className="h-7 w-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover-elevate active-elevate-2"
+                    data-testid={`button-decrease-${item.id}`}
+                  >
+                    <MinusIcon className="h-4 w-4" />
+                  </button>
+                  <span className="w-8 text-center font-semibold text-foreground" data-testid={`quantity-${item.id}`}>
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => updateQuantity(item.id, quantity + 1)}
+                    className="h-7 w-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover-elevate active-elevate-2"
+                    data-testid={`button-increase-${item.id}`}
+                  >
+                    <PlusIcon className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    );
+  };
+
+  if (isSearching) {
+    return (
+      <div className="min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
+          <div className="mb-6 space-y-4">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold font-serif text-foreground mb-2">
+                Search Results
+              </h2>
+              <p className="text-muted-foreground text-sm md:text-base">
+                {hasSearchResults
+                  ? `Found items in ${Object.keys(filteredMenu).length} ${selectedCategory ? 'category' : 'categories'}`
+                  : "No items found matching your search"}
+              </p>
+            </div>
+            <CategoryFilter />
+          </div>
+
+          {hasSearchResults ? (
+            <div className="space-y-8 pb-24">
+              {Object.entries(filteredMenu).map(([category, items]) => (
+                <div key={category}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <h3 className="text-xl md:text-2xl font-semibold font-serif text-foreground">
+                      {category}
+                    </h3>
+                    <Badge variant="secondary" data-testid={`badge-${category.toLowerCase()}`}>
+                      {items.length} items
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    {items.map(renderMenuItem)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12" data-testid="no-results">
+              <p className="text-muted-foreground">
+                Try searching with different keywords
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-2">
+            Our Menu
+          </h2>
+          <p className="text-muted-foreground text-sm md:text-base">
+            Select a category to explore our delicious offerings
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-24">
+          {Object.keys(menu).map((category) => {
+            const Icon = categoryIcons[category] || SparklesIcon;
+            const itemCount = menu[category].length;
+
+            return (
+              <button
+                key={category}
+                onClick={() => setLocation(`/category/${category}`)}
+                className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                data-testid={`category-${category.toLowerCase()}`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent backdrop-blur-md" />
+                
+                <div className="relative h-full flex flex-col items-center justify-center p-6 text-center">
+                  <Icon className="h-12 w-12 md:h-16 md:w-16 text-primary mb-3 md:mb-4" />
+                  
+                  <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-1">
+                    {category}
+                  </h3>
+                  
+                  <span className="text-xs md:text-sm text-muted-foreground">
+                    {itemCount} items
+                  </span>
+                </div>
+
+                <div className="absolute top-2 right-2 bg-card/80 backdrop-blur-sm px-2 py-1 rounded-full">
+                  <span className="text-xs font-medium text-card-foreground">
+                    {itemCount}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

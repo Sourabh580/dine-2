@@ -1,0 +1,125 @@
+Create a fully static mobile-first digital restaurant menu web app using React (Vite) + Tailwind CSS.  
+It should NOT require any backend server — all orders are sent via fetch() to an external API endpoint (OWNER_API_URL) using an API key (OWNER_API_KEY).  
+
+💡 Purpose:
+Customer can browse menu sections (Sabji, Roti, Beverages, etc.), select items, and place an order.
+After submitting the order, it’s sent to my owner dashboard API endpoint as JSON.
+
+---
+
+# Functional Requirements
+
+1️⃣ **Stack & Setup**
+   - React + Vite project (no backend)
+   - TailwindCSS for styling
+   - A single-page app (SPA)
+   - All UI interactions handled in React states
+
+2️⃣ **UI Flow**
+   - Header shows restaurant name or logo (PNG upload support)
+   - Category grid on homepage:
+       Example categories: Sabji, Roti, Beverages, Desserts
+   - On clicking a category → show list of available items (card style)
+   - Clicking an item toggles selection → green tick appears
+   - User can switch between categories and keep selections
+
+3️⃣ **Order Button**
+   - When any item selected → show a floating green “Order Now” button (bottom-right)
+   - On click → open modal/page for:
+       - Table Number (required)
+       - Customer Name (required)
+       - Optional notes
+       - Selected items summary with + / - quantity
+       - Total amount
+       - “Confirm Order” button
+
+4️⃣ **Order Submit**
+   - On confirm:
+       - Send POST request via fetch to OWNER_API_URL
+       - Headers:
+         {
+           "Content-Type": "application/json",
+           "Authorization": "Bearer " + OWNER_API_KEY
+         }
+       - Body:
+         {
+           table_no: "...",
+           customer_name: "...",
+           items: [{ name, qty, price }],
+           total: ...,
+           notes: "..."
+         }
+   - After success → show animated “Order Placed Successfully 🎉” screen.
+   - After error → show toast “Something went wrong.”
+
+5️⃣ **Data & Config**
+   - `/src/data/menu.js` → contains all menu items and categories:
+     Example:
+     ```js
+     export const menu = {
+       Sabji: [
+         { name: "Paneer Butter Masala", price: 120 },
+         { name: "Aloo Gobi", price: 90 },
+         { name: "Mix Veg", price: 110 },
+       ],
+       Roti: [
+         { name: "Tawa Roti", price: 10 },
+         { name: "Butter Roti", price: 15 },
+         { name: "Lachha Paratha", price: 25 },
+       ],
+       Beverages: [
+         { name: "Masala Chai", price: 20 },
+         { name: "Sweet Lassi", price: 40 },
+       ],
+     };
+     ```
+   - `/src/config.js` → holds:
+     ```js
+     export const OWNER_API_URL = "https://your-dashboard-endpoint.com/api/order";
+     export const OWNER_API_KEY = "YOUR_SECRET_KEY";
+     export const RESTAURANT_NAME = "Your Restaurant Name";
+     export const LOGO_URL = "/logo.png"; // optional
+     ```
+
+6️⃣ **UI Styling**
+   - Use Tailwind:
+     - rounded-xl, shadow-md cards
+     - p-4 spacing, glassmorphism feel
+     - Floating button: fixed bottom-5 right-5, bg-green-500, rounded-full
+   - Mobile-first layout, smooth transitions
+   - Use Heroicons for icons (tick, cart, etc.)
+   - Add small scale animation when item selected
+
+7️⃣ **Storage**
+   - Use `localStorage` to save selected items (so user doesn’t lose selection on refresh)
+
+8️⃣ **Optional Enhancements**
+   - Toast (success/error) using React hot-toast or custom
+   - Dark mode toggle
+   - Scroll animation between pages
+
+---
+
+# Deliverables
+
+✅ Fully working React app that runs on Replit as static site  
+✅ `/src/config.js` where I can paste OWNER_API_URL and OWNER_API_KEY  
+✅ Beautiful, responsive UI (works smoothly on mobile browsers)  
+✅ Instructions in README:
+   - How to edit menu.js
+   - How to connect to my API dashboard
+   - How to deploy to Netlify or Replit static site
+
+---
+
+# Output expectation:
+Generate a production-ready, static React + Tailwind web app in Replit that meets all above points.
+The project should open instantly with:
+- `/` → category grid
+- Category click → items list
+- Selection → floating Order Now button
+- Order Now click → order form
+- Submit → POST to OWNER_API_URL
+- Confirmation screen → “Order Placed Successfully 🎉”
+
+Make UI premium-level (restaurant feel) with Tailwind gradient and soft animation.
