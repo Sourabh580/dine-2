@@ -183,11 +183,11 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
-        <div className="text-center mb-8 md:mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-2">
+        <div className="text-center mb-8 md:mb-12 bg-card/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-border">
+          <h2 className="text-4xl md:text-5xl font-bold font-serif text-foreground mb-3 drop-shadow-sm">
             Our Menu
           </h2>
-          <p className="text-muted-foreground text-sm md:text-base">
+          <p className="text-foreground/80 text-base md:text-lg font-medium">
             Select a category to explore our delicious offerings
           </p>
         </div>
@@ -218,18 +218,14 @@ export default function HomePage() {
                   alt={category}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30 group-hover:from-black/60 group-hover:via-black/30 group-hover:to-black/20 transition-all duration-300" />
                 
                 <div className="relative h-full flex flex-col items-center justify-center p-6 text-center">
-                  <div className="bg-white/20 backdrop-blur-sm p-4 rounded-full mb-3 md:mb-4">
-                    <Icon className="h-12 w-12 md:h-16 md:w-16 text-white drop-shadow-lg" />
-                  </div>
-                  
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                  <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2 drop-shadow-[0_4px_12px_rgba(0,0,0,1)] tracking-wide">
                     {category}
                   </h3>
                   
-                  <span className="text-sm md:text-base text-white/90 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  <span className="text-base md:text-lg text-white font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,1)] bg-black/30 px-4 py-1 rounded-full backdrop-blur-sm">
                     {itemCount} items
                   </span>
                 </div>

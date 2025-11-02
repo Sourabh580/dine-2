@@ -9,7 +9,7 @@ export function Header() {
   const itemCount = getTotalItems();
 
   return (
-    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className="sticky top-0 z-40 bg-card shadow-md border-b-2 border-primary/20">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 md:py-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -20,7 +20,7 @@ export function Header() {
                 className="h-10 md:h-12 w-auto"
               />
             )}
-            <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">
+            <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground drop-shadow-sm">
               {RESTAURANT_NAME}
             </h1>
           </div>
