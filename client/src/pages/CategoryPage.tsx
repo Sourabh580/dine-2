@@ -29,6 +29,15 @@ export default function CategoryPage() {
     return cart.find((item) => item.id === itemId)?.quantity || 0;
   };
 
+  const getImagePath = (imageName?: string) => {
+    if (!imageName) return null;
+    try {
+      return new URL(`../../../attached_assets/stock_images/${imageName}`, import.meta.url).href;
+    } catch {
+      return null;
+    }
+  };
+
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
@@ -70,12 +79,21 @@ export default function CategoryPage() {
             return (
               <Card
                 key={item.id}
-                className={`p-4 transition-all duration-200 ${
+                className={`overflow-hidden transition-all duration-200 ${
                   isSelected ? "ring-2 ring-primary shadow-lg scale-105" : ""
                 }`}
                 data-testid={`item-${item.id}`}
               >
-                <div className="space-y-3">
+                {item.image && (
+                  <div className="w-full h-48 overflow-hidden">
+                    <img 
+                      src={getImagePath(item.image) || ''} 
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-4 space-y-3">
                   <div>
                     <h3 className="text-lg md:text-xl font-medium text-foreground mb-1">
                       {item.name}

@@ -42,15 +42,33 @@ export default function HomePage() {
     const quantity = getItemQuantity(item.id);
     const isSelected = quantity > 0;
 
+    const getImagePath = (imageName?: string) => {
+      if (!imageName) return null;
+      try {
+        return new URL(`../../../attached_assets/stock_images/${imageName}`, import.meta.url).href;
+      } catch {
+        return null;
+      }
+    };
+
     return (
       <Card
         key={item.id}
-        className={`p-4 transition-all duration-200 ${
+        className={`overflow-hidden transition-all duration-200 ${
           isSelected ? "ring-2 ring-primary shadow-lg scale-105" : ""
         }`}
         data-testid={`item-${item.id}`}
       >
-        <div className="space-y-3">
+        {item.image && (
+          <div className="w-full h-48 overflow-hidden">
+            <img 
+              src={getImagePath(item.image) || ''} 
+              alt={item.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+        <div className="p-4 space-y-3">
           <div>
             <h3 className="text-lg md:text-xl font-medium text-foreground mb-1">
               {item.name}
@@ -176,25 +194,27 @@ export default function HomePage() {
               <button
                 key={category}
                 onClick={() => setLocation(`/category/${category}`)}
-                className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-primary/30"
                 data-testid={`category-${category.toLowerCase()}`}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent backdrop-blur-md" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/30 to-primary/20" />
                 
-                <div className="relative h-full flex flex-col items-center justify-center p-6 text-center">
-                  <Icon className="h-12 w-12 md:h-16 md:w-16 text-primary mb-3 md:mb-4" />
+                <div className="relative h-full flex flex-col items-center justify-center p-6 text-center bg-card/70 backdrop-blur-sm">
+                  <div className="bg-primary/20 p-4 rounded-full mb-3 md:mb-4">
+                    <Icon className="h-12 w-12 md:h-16 md:w-16 text-primary" />
+                  </div>
                   
-                  <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-1">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground mb-1 drop-shadow-sm">
                     {category}
                   </h3>
                   
-                  <span className="text-xs md:text-sm text-muted-foreground">
+                  <span className="text-sm md:text-base text-foreground/80 font-medium">
                     {itemCount} items
                   </span>
                 </div>
 
-                <div className="absolute top-2 right-2 bg-card/80 backdrop-blur-sm px-2 py-1 rounded-full">
-                  <span className="text-xs font-medium text-card-foreground">
+                <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-3 py-1 rounded-full shadow-md">
+                  <span className="text-sm font-bold">
                     {itemCount}
                   </span>
                 </div>
