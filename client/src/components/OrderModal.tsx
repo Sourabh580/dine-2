@@ -15,7 +15,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { orderFormSchema, type OrderFormData } from "../schemas/orderSchema";
 import toast from "react-hot-toast";
-import { OWNER_API_URL, OWNER_API_KEY } from "../config";
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -40,6 +39,8 @@ export function OrderModal({ isOpen, onClose, onSuccess }: OrderModalProps) {
   const onSubmit = async (data: OrderFormData) => {
     try {
       const orderData = {
+        id: Date.now(), // unique order ID
+        placedAt: new Date().toLocaleString(),
         table_no: data.tableNumber,
         customer_name: data.customerName,
         items: cart.map((item) => ({
@@ -48,21 +49,15 @@ export function OrderModal({ isOpen, onClose, onSuccess }: OrderModalProps) {
           price: item.price,
         })),
         total,
-        notes: data.notes || undefined,
+        notes: data.notes || "",
       };
 
-      const response = await fetch(OWNER_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${OWNER_API_KEY}`,
-        },
-        body: JSON.stringify(orderData),
-      });
+      // ---- Save order to localStorage ----
+      const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+      existingOrders.push(orderData);
+      localStorage.setItem("orders", JSON.stringify(existingOrders));
 
-      if (!response.ok) {
-        throw new Error("Failed to place order");
-      }
+      toast.success("✅ Order placed successfully!");
 
       clearCart();
       form.reset();
@@ -83,7 +78,7 @@ export function OrderModal({ isOpen, onClose, onSuccess }: OrderModalProps) {
         onClick={onClose}
         data-testid="modal-backdrop"
       />
-      
+
       <div className="relative bg-card border border-card-border rounded-t-3xl md:rounded-2xl w-full md:max-w-2xl max-h-[90vh] overflow-hidden animate-in slide-in-from-bottom-8 md:slide-in-from-bottom-0 md:zoom-in-95 duration-300">
         <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-card-border px-6 py-4 flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-card-foreground">Your Order</h2>
@@ -174,8 +169,18 @@ export function OrderModal({ isOpen, onClose, onSuccess }: OrderModalProps) {
                       data-testid={`cart-item-${item.id}`}
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-foreground truncate" data-testid={`text-item-name-${item.id}`}>{item.name}</p>
-                        <p className="text-sm text-muted-foreground" data-testid={`text-item-price-${item.id}`}>₹{item.price} each</p>
+                        <p
+                          className="font-medium text-foreground truncate"
+                          data-testid={`text-item-name-${item.id}`}
+                        >
+                          {item.name}
+                        </p>
+                        <p
+                          className="text-sm text-muted-foreground"
+                          data-testid={`text-item-price-${item.id}`}
+                        >
+                          ₹{item.price} each
+                        </p>
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
@@ -188,7 +193,10 @@ export function OrderModal({ isOpen, onClose, onSuccess }: OrderModalProps) {
                           >
                             <MinusIcon className="h-4 w-4" />
                           </button>
-                          <span className="w-8 text-center font-semibold text-foreground" data-testid={`text-quantity-${item.id}`}>
+                          <span
+                            className="w-8 text-center font-semibold text-foreground"
+                            data-testid={`text-quantity-${item.id}`}
+                          >
                             {item.quantity}
                           </span>
                           <button
@@ -210,7 +218,10 @@ export function OrderModal({ isOpen, onClose, onSuccess }: OrderModalProps) {
                           <TrashIcon className="h-5 w-5 text-destructive" />
                         </button>
 
-                        <span className="text-sm font-semibold text-foreground w-16 text-right" data-testid={`text-item-total-${item.id}`}>
+                        <span
+                          className="text-sm font-semibold text-foreground w-16 text-right"
+                          data-testid={`text-item-total-${item.id}`}
+                        >
                           ₹{item.price * item.quantity}
                         </span>
                       </div>
@@ -221,7 +232,10 @@ export function OrderModal({ isOpen, onClose, onSuccess }: OrderModalProps) {
                 <div className="mt-6 pt-4 border-t border-border">
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-foreground">Total</span>
-                    <span className="text-2xl font-bold text-primary" data-testid="text-total">
+                    <span
+                      className="text-2xl font-bold text-primary"
+                      data-testid="text-total"
+                    >
                       ₹{total}
                     </span>
                   </div>
