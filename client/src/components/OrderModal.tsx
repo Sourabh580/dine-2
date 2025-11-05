@@ -44,18 +44,19 @@ export function OrderModal({ isOpen, onClose, onSuccess }: OrderModalProps) {
       }
 
       const newOrder = {
-        table_no: data.tableNumber,
-        customer_name: data.customerName,
-        notes: data.notes || "",
-        status: "pending",
-        items: cart.map((item) => ({
-          name: item.name,
-          qty: item.quantity,
-          price: item.price,
-        })),
-        total,
-        time: new Date().toISOString(),
-      };
+  restaurant_id: "res-1", // 👈 Add this line
+  table_no: data.tableNumber,
+  customer_name: data.customerName,
+  notes: data.notes || "",
+  status: "pending",
+  items: cart.map((item) => ({
+    name: item.name,
+    qty: item.quantity,
+    price: item.price,
+  })),
+  total,
+  time: new Date().toISOString(),
+};
 
       // ✅ Send to backend
       const res = await fetch("https://nevolt-backend.onrender.com/api/orders", {
