@@ -19,7 +19,7 @@ export const menu: Record<string, MenuItem[]> = {
     { id: "sabji-3", name: "Mix Veg", price: 110, description: "Fresh seasonal vegetables in a rich gravy", image: "mixed_vegetables_cur_99aadd3c.jpg" },
     { id: "sabji-4", name: "Dal Tadka", price: 100, description: "Yellow lentils tempered with garlic and cumin", image: "dal_tadka_yellow_len_8103fd18.jpg" },
     { id: "sabji-5", name: "Palak Paneer", price: 130, description: "Cottage cheese in creamy spinach gravy", image: "palak_paneer_spinach_61b69f89.jpg" },
-    { id: "sabji-6", name: "Chole", price: 95, description: "Spicy chickpea curry with tangy tomatoes", image: "chole_chickpea_curry_a08bdb33.jpg" },
+    { id: "sabji-6", name: "Chole", price: 95, description: "Spicy chickpea curry with tangy tomatoes", image: "Punjabi-Chole-Masala-2-3.jpg" },
   ],
   Roti: [
     { id: "roti-1", name: "Tawa Roti", price: 10, description: "Soft whole wheat flatbread", image: "tawa_roti_indian_fla_01120b6a.jpg" },
