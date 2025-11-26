@@ -29,8 +29,6 @@ export const menu: Record<string, MenuItem[]> = {
   ],
   Desserts: [
     { id: "dessert-1", name: "Gulab Jamun", price: 45, description: "Soft milk dumplings in sugar syrup", image: "gulab_jamun_indian_d_68135efd.jpg" },
-    { id: "dessert-2", name: "Rasmalai", price: 55, description: "Cottage cheese patties in sweet milk", image: "rasmalai_indian_dess_999d1e62.jpg" },
-    { id: "dessert-3", name: "Kheer", price: 50, description: "Rice pudding with cardamom", image: "kheer_indian_rice_pu_9a48c04b.jpg" },
     { id: "dessert-4", name: "Jalebi", price: 40, description: "Crispy syrup-soaked spirals", image: "jalebi_indian_sweet__29942f20.jpg" },
     { id: "dessert-5", name: "Ice Cream", price: 35, description: "Creamy vanilla ice cream", image: "vanilla_ice_cream_sc_f17dd9b1.jpg" },
   ],
