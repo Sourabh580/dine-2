@@ -1,19 +1,20 @@
 /**
- * API Service
- * Handles all HTTP requests to the Express backend
+ * API Service - Multi-Vendor SaaS Edition
+ * Handles all HTTP requests to the Express backend with vendor support
  * ES Modules syntax for React frontend
  */
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 /**
- * Initiates Stripe checkout session
+ * Initiates Stripe checkout session for a specific vendor
  * @param {Array} cartItems - Array of items in cart
  * @param {String} branchId - Branch ID for the order
+ * @param {String} ownerId - Vendor/Owner ID (required for multi-vendor)
  * @returns {Promise<Object>} Response with sessionUrl
  * @throws {Error} If checkout fails
  */
-export const initiateCheckout = async (cartItems, branchId) => {
+export const initiateCheckout = async (cartItems, branchId, ownerId) => {
   try {
     // Validation
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
@@ -24,6 +25,10 @@ export const initiateCheckout = async (cartItems, branchId) => {
       throw new Error('Branch ID is required');
     }
 
+    if (!ownerId) {
+      throw new Error('Vendor/Owner ID is required for multi-vendor checkout');
+    }
+
     // Make POST request to backend
     const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
       method: 'POST',
@@ -32,7 +37,8 @@ export const initiateCheckout = async (cartItems, branchId) => {
       },
       body: JSON.stringify({
         cartItems: cartItems,
-        branchId: branchId
+        branchId: branchId,
+        owner_id: ownerId  // Multi-vendor key
       })
     });
 
@@ -165,22 +171,30 @@ export const fetchPersonalizedRecommendations = async (customerId, branchId) => 
 };
 
 /**
- * Retrieves payment session details
+ * Retrieves payment session details from specific vendor's Stripe account
  * @param {String} sessionId - Stripe session ID
+ * @param {String} ownerId - Vendor/Owner ID (required for multi-vendor)
  * @returns {Promise<Object>} Session details including payment status
  * @throws {Error} If fetch fails
  */
-export const getSessionDetails = async (sessionId) => {
+export const getSessionDetails = async (sessionId, ownerId) => {
   try {
     if (!sessionId) {
       throw new Error('Session ID is required');
     }
 
+    if (!ownerId) {
+      throw new Error('Vendor/Owner ID is required for multi-vendor session retrieval');
+    }
+
     const response = await fetch(`${API_BASE_URL}/payment/session/${sessionId}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({
+        owner_id: ownerId  // Multi-vendor key
+      })
     });
 
     if (!response.ok) {
@@ -201,10 +215,45 @@ export const getSessionDetails = async (sessionId) => {
   }
 };
 
+/**
+ * Validates if a vendor has payment setup configured
+ * Useful for pre-flight checks before showing checkout button
+ * @param {String} ownerId - Vendor/Owner ID
+ * @returns {Promise<Boolean>} True if vendor has Stripe configured
+ */
+export const validateVendorPaymentSetup = async (ownerId) => {
+  try {
+    if (!ownerId) {
+      return false;
+    }
+
+    // Try a dummy checkout to verify vendor setup
+    // In production, you might want a dedicated endpoint for this
+    const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        cartItems: [],  // Empty to skip line items processing
+        branchId: 'test',
+        owner_id: ownerId
+      })
+    });
+
+    const data = await response.json();
+    return data.success || false;
+  } catch (error) {
+    console.error('Vendor validation error:', error.message);
+    return false;
+  }
+};
+
 // Export all functions as default object as well
 export default {
   initiateCheckout,
   fetchAIRecommendations,
   fetchPersonalizedRecommendations,
-  getSessionDetails
+  getSessionDetails,
+  validateVendorPaymentSetup
 };
